@@ -1,5 +1,7 @@
 {
 	"name": "NITA-in-Codespaces",
+	"dockerFile": "Dockerfile",
+    
 	"runArgs": ["--init", "--privileged"],
 	"mounts": [ "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind" ],
 	"overrideCommand": false,
