@@ -117,23 +117,10 @@ Debug "echo The CPU architecture is ${ARCH}"
 Debug "echo Free memory is ${MEM}GB"
 Debug "echo Free disk space is ${DISK}GB"
 
-case "${OS}" in
 
-    AlmaLinux)
-        INSTALLER="dnf install -y"
-        UPDATE="dnf update -y"
-        ;;
+INSTALLER="apt install -y"
+UPDATE="apt update -y"
 
-    Ubuntu)
-        INSTALLER="apt install -y"
-        UPDATE="apt update -y"
-        ;;
-
-    *)
-        echo "Warning: OS \"${OS}\" is untested."
-        [ ! ${IGNORE_WARNINGS} ] && exit
-        ;;
-esac
 
 [ "X${ARCH}" != "Xx86_64" ] && {
     echo "Warning: NITA has not been tested on this architecture"
