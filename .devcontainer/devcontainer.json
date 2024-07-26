@@ -1,13 +1,16 @@
 {
 	"name": "NITA-in-Codespaces",
 	"dockerFile": "Dockerfile",
-    
+
 	"runArgs": ["--init", "--privileged"],
 	"mounts": [ "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind" ],
-	"overrideCommand": false,
+	"overrideCommand": false,	
+    
+    // some base images require a specific user name
+	"remoteUser": "vscode",
 
 
 	"hostRequirements": {
-		"cpus": 2
+		"cpus": 4
 	}
 }
