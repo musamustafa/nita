@@ -51,8 +51,8 @@ NITAROOT=${NITAROOT:=/opt}
     wget --inet4-only https://raw.githubusercontent.com/Juniper/nita-webapp/main/nginx/nginx.conf -O ${PROXY}/nginx.conf
     # ln -s ${NITAROOT}/nita/k8s/proxy ${PROXY}/nginx.conf
 
-    Debug "kubectl get nodes -o wide"
-    Debug "kubectl get pods -n nita"
+    kubectl get nodes -o wide
+    kubectl get pods -n nita
 
     echo "${ME}: Generating nginx certificates."
     mkdir -p ${CERTS}
