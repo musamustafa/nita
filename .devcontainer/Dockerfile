@@ -1,3 +1,5 @@
+
+FROM alpine:latest 
 ARG KIND_VERSION=0.14.0
 
 RUN apk add --no-cache curl docker-cli
