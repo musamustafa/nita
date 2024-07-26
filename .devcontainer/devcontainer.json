@@ -1,6 +1,7 @@
 {
 	"name": "NITA-in-Codespaces",
-	"dockerFile": "Dockerfile",
+	
+	//"dockerFile": "Dockerfile",
 
 	"runArgs": ["--init", "--privileged"],
 	"mounts": [ "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind" ],
@@ -9,13 +10,7 @@
     // some base images require a specific user name
 	"remoteUser": "vscode",
 
-	// Set container specific settings
-	"settings": {
-		"terminal.integrated.defaultProfile.linux": "zsh",
-		"files.trimTrailingWhitespace": true,
-		"files.trimFinalNewlines": true,
-		"files.insertFinalNewline": true
-	},
+
     
 	"hostRequirements": {
 		"cpus": 4
