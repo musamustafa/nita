@@ -1,5 +1,5 @@
 BINDIR=${BINDIR:=/usr/local/bin} 
-
+Question "Install NITA repositories" && {
 
     mkdir -p ${BINDIR}
 
