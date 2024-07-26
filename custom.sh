@@ -96,13 +96,6 @@ Debug() {
 
 echo "${ME}: NITA install script."
 
-[ "X$EUID" != "X0" ] && {
-
-    # Check that our effective user is root
-
-    echo "Error: To install system software this script must be run as root or \"sudo -E\""
-    exit 1
-}
 
 Debug "echo $PATH"
 Debug "echo $NITAROOT $KUBEROOT $K8SROOT $PROXY $CERTS $JENKINS $KEYPASS $KUBECONFIG $JAVA_HOME"
