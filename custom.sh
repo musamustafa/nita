@@ -1,7 +1,161 @@
 #!/bin/bash
-BINDIR=${BINDIR:=/usr/local/bin} 
-NITAROOT=${NITAROOT:=/opt}  
-{
+
+# @(#) install.sh - NITA installation script
+
+# Written by us, so that you don't have to
+
+# ------------------------------------------------------------------------------
+# Define functions and variables
+
+ME="${0##*/}"                           # This scripts name
+HOST=`uname -n`
+REALUSER="${SUDO_USER:-${USER}}"        # User behind sudo
+bold=$(tput bold)                       # For echo emphasis
+normal=$(tput sgr0)
+PATH=${PATH:="/bin:/usr/bin:/usr/sbin"} # Set out base path from the parent
+
+# Define recommended values (in GB)
+
+RECOMMENDED_MEMORY=8                    # Recommended memory
+RECOMMENDED_DISK=20                     # Recommended free disk space
+
+# Note: Set IGNORE_WARNINGS to true to continue regardless
+
+# Set these env vars or take them from the calling shell
+
+NITAROOT=${NITAROOT:=/opt}              # Where to install NITA
+NITAPROJECT=${NITAPROJECT:=/var/nita_project}    # Home of NITA project files
+BINDIR=${BINDIR:=/usr/local/bin}        # Where to put binaries
+BASH_COMPLETION=${BASH_COMPLETION:="/etc/bash_completion.d"}
+JAVA_HOME=${JAVA_HOME:=$NITAROOT/jdk-19.0.1}
+
+K8SROOT=${K8SROOT:=$NITAROOT/nita/k8s}
+PROXY=${PROXY:=$K8SROOT/proxy}
+CERTS=${CERTS:=$PROXY/certificates}
+JENKINS=${JENKINS:=/var/jenkins_home}
+KEYPASS=${KEYPASS:="nita123"}
+
+KUBEROOT=${KUBEROOT:=/etc/kubernetes}
+KUBECONFIG=${KUBECONFIG:=$KUBEROOT/admin.conf}
+
+PATH=${PATH}:${JAVA_HOME}/bin
+export OWNER_HOME=`egrep "^${REALUSER}" /etc/passwd | awk -F: '{print $6}'`
+export PATH NITAROOT KUBEROOT K8SROOT PROXY CERTS JENKINS KEYPASS KUBECONFIG JAVA_HOME
+
+Question () {
+
+    # Ask a yes/no/quit question. Default answer is "No"
+
+    echo -n "$1 (y|n|q)? [n] "
+
+    read ANSWER
+    ANSWER=${ANSWER:="n"}
+
+    [ "X$ANSWER" = "Xy" ] || [ "X$ANSWER" = "XY" ] && {
+        return 0
+    }
+
+    [ "X$ANSWER" = "Xq" ] || [ "X$ANSWER" = "XQ" ] && {
+        echo "Goodbye!"
+        exit 0
+    }
+
+    return 1
+}
+
+Verify() {
+
+    # Check that a named file exists
+
+    if [ ! -x "$(command -v $1)" ]; then
+
+        echo "Error: Cannot find command \"$1\"."
+        exit 1
+
+    else
+
+        Debug "echo $1 exists"
+    fi
+
+}
+
+Debug() {
+
+    # Execute debug commands if DEBUG is set in the shell
+
+    [ ${DEBUG} ] && {
+        echo "${ME}: DEBUG: $*" >&2
+        eval "$*" >&2
+    }
+
+    return $?
+}
+
+# ------------------------------------------------------------------------------
+# Check the user and the environment we are running on
+
+echo "${ME}: NITA install script."
+
+[ "X$EUID" != "X0" ] && {
+
+    # Check that our effective user is root
+
+    echo "Error: To install system software this script must be run as root or \"sudo -E\""
+    exit 1
+}
+
+Debug "echo $PATH"
+Debug "echo $NITAROOT $KUBEROOT $K8SROOT $PROXY $CERTS $JENKINS $KEYPASS $KUBECONFIG $JAVA_HOME"
+
+ARCH=`uname -m`
+MEM=`free -g | grep Mem | awk '{print $2}'`
+DISK=`df -h --output='avail' /var | sed 1d | sed 's/.$//'`
+OS=`hostnamectl | grep "Operating System" | awk '{print $3}'`
+
+Debug "echo The OS is ${OS}"
+Debug "echo The CPU architecture is ${ARCH}"
+Debug "echo Free memory is ${MEM}GB"
+Debug "echo Free disk space is ${DISK}GB"
+
+case "${OS}" in
+
+    AlmaLinux)
+        INSTALLER="dnf install -y"
+        UPDATE="dnf update -y"
+        ;;
+
+    Ubuntu)
+        INSTALLER="apt install -y"
+        UPDATE="apt update -y"
+        ;;
+
+    *)
+        echo "Warning: OS \"${OS}\" is untested."
+        [ ! ${IGNORE_WARNINGS} ] && exit
+        ;;
+esac
+
+[ "X${ARCH}" != "Xx86_64" ] && {
+    echo "Warning: NITA has not been tested on this architecture"
+    [ ! ${IGNORE_WARNINGS} ] && exit
+}
+
+[[ "${MEM}" -lt ${RECOMMENDED_MEMORY} ]] && {
+    echo "Warning: Available memory is below recommended amount of ${RECOMMENDED_MEMORY}GB"
+    [ ! ${IGNORE_WARNINGS} ] && exit
+}
+
+[[ "${DISK}" -lt ${RECOMMENDED_DISK} ]] && {
+    echo "Warning: Available storage space is below recommended amount of ${RECOMMENDED_DISK}GB"
+    [ ! ${IGNORE_WARNINGS} ] && exit
+}
+
+# ------------------------------------------------------------------------------
+# Main part of the script
+
+# ------------------------------------------------------------------------------
+
+Question "Install NITA repositories" && {
 
     mkdir -p ${BINDIR}
 
@@ -51,8 +205,8 @@ NITAROOT=${NITAROOT:=/opt}
     wget --inet4-only https://raw.githubusercontent.com/Juniper/nita-webapp/main/nginx/nginx.conf -O ${PROXY}/nginx.conf
     # ln -s ${NITAROOT}/nita/k8s/proxy ${PROXY}/nginx.conf
 
-    kubectl get nodes -o wide
-    kubectl get pods -n nita
+    Debug "kubectl get nodes -o wide"
+    Debug "kubectl get pods -n nita"
 
     echo "${ME}: Generating nginx certificates."
     mkdir -p ${CERTS}
@@ -63,7 +217,7 @@ NITAROOT=${NITAROOT:=/opt}
     kubectl create cm proxy-cert-cm --from-file=${CERTS}/ --namespace nita
 
     echo "${ME}: Generating Jenkins keystore."
-    echo In ${JENKINS}
+    Debug "echo In ${JENKINS}"
     # Note that keys and certs must be stored in the same directory as is referenced in the YAML configs
     mkdir -p ${JENKINS}
     Verify keytool
@@ -80,9 +234,9 @@ NITAROOT=${NITAROOT:=/opt}
 
     echo "${ME}: Please wait ${bold}5-10 minutes${normal} for the Kubernetes pods to initialise"
 
-    kubectl get cm
-    kubectl describe cm
-    kubectl get ns nita
+    Debug "kubectl get cm"
+    Debug "kubectl describe cm"
+    Debug "kubectl get ns nita"
 
     # Finally, copy the K8S admin file to the local user and set ownership and update bashrc
 
@@ -97,7 +251,7 @@ NITAROOT=${NITAROOT:=/opt}
 
 }
 
-{
+Question "Do you want to run Ansible as a standalone Docker container" && {
 
     # Running standalone Ansible containers requires docker
 
@@ -110,7 +264,7 @@ NITAROOT=${NITAROOT:=/opt}
 
 }
 
-ls -al ${NITAROOT}
+Debug "ls -al ${NITAROOT}"
 
 echo "${ME}: NITA installation has finished."
 echo ""
