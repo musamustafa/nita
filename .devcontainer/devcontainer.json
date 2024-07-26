@@ -8,7 +8,8 @@
 	"overrideCommand": false,	
     
     // some base images require a specific user name
-	"remoteUser": "vscode",
+	
+	//"remoteUser": "vscode",
 
 
     
