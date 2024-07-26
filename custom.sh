@@ -110,9 +110,7 @@ Debug "echo $NITAROOT $KUBEROOT $K8SROOT $PROXY $CERTS $JENKINS $KEYPASS $KUBECO
 ARCH=`uname -m`
 MEM=`free -g | grep Mem | awk '{print $2}'`
 DISK=`df -h --output='avail' /var | sed 1d | sed 's/.$//'`
-OS=`hostnamectl | grep "Operating System" | awk '{print $3}'`
 
-Debug "echo The OS is ${OS}"
 Debug "echo The CPU architecture is ${ARCH}"
 Debug "echo Free memory is ${MEM}GB"
 Debug "echo Free disk space is ${DISK}GB"
