@@ -3,7 +3,7 @@
 	
 	//"dockerFile": "Dockerfile",
     "build": {
-		"dockerfile": "Dockerfile",
+		//"dockerfile": "Dockerfile",
 		"args": { "KIND_VERSION": "0.14.0" }
 	  },
 
