@@ -1,3 +1,4 @@
+#!/bin/bash
 BINDIR=${BINDIR:=/usr/local/bin} 
 Question "Install NITA repositories" && {
 
