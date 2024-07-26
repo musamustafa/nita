@@ -17,7 +17,7 @@ PATH=${PATH:="/bin:/usr/bin:/usr/sbin"} # Set out base path from the parent
 # Define recommended values (in GB)
 
 RECOMMENDED_MEMORY=8                    # Recommended memory
-RECOMMENDED_DISK=20                     # Recommended free disk space
+RECOMMENDED_DISK=10                     # Recommended free disk space
 
 # Note: Set IGNORE_WARNINGS to true to continue regardless
 
