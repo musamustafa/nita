@@ -63,7 +63,7 @@ NITAROOT=${NITAROOT:=/opt}
     kubectl create cm proxy-cert-cm --from-file=${CERTS}/ --namespace nita
 
     echo "${ME}: Generating Jenkins keystore."
-    Debug "echo In ${JENKINS}"
+    echo In ${JENKINS}
     # Note that keys and certs must be stored in the same directory as is referenced in the YAML configs
     mkdir -p ${JENKINS}
     Verify keytool
@@ -80,9 +80,9 @@ NITAROOT=${NITAROOT:=/opt}
 
     echo "${ME}: Please wait ${bold}5-10 minutes${normal} for the Kubernetes pods to initialise"
 
-    Debug "kubectl get cm"
-    Debug "kubectl describe cm"
-    Debug "kubectl get ns nita"
+    kubectl get cm
+    kubectl describe cm
+    kubectl get ns nita
 
     # Finally, copy the K8S admin file to the local user and set ownership and update bashrc
 
