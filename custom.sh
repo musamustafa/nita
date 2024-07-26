@@ -1,6 +1,7 @@
 #!/bin/bash
 BINDIR=${BINDIR:=/usr/local/bin} 
-Question "Install NITA repositories" && {
+NITAROOT=${NITAROOT:=/opt}  
+{
 
     mkdir -p ${BINDIR}
 
@@ -96,7 +97,7 @@ Question "Install NITA repositories" && {
 
 }
 
-Question "Do you want to run Ansible as a standalone Docker container" && {
+{
 
     # Running standalone Ansible containers requires docker
 
@@ -109,7 +110,7 @@ Question "Do you want to run Ansible as a standalone Docker container" && {
 
 }
 
-Debug "ls -al ${NITAROOT}"
+ls -al ${NITAROOT}
 
 echo "${ME}: NITA installation has finished."
 echo ""
