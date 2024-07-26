@@ -14,9 +14,7 @@
 	
 	//"remoteUser": "vscode",
 
-    "settings": {
-		"terminal.integrated.shell.linux": "/bin/sh"
-	},
+
 	    
 	"hostRequirements": {
 		"cpus": 4
