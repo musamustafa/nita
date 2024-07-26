@@ -1,15 +1,12 @@
-# this image is built and updated weekly
-# https://github.com/cse-labs/codespaces-images
+FROM alpine:latest 
 
-FROM ghcr.io/cse-labs/k3d:latest
+ARG KIND_VERSION=0.14.0
 
-# some images require specific values
-ARG USERNAME=vscode
+RUN apk add --no-cache curl docker-cli
 
-# log the docker build start event
-RUN echo "$(date +'%Y-%m-%d %H:%M:%S')    docker build start" >> /home/$USERNAME/status
+RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+RUN chmod +x ./kubectl
+RUN mv ./kubectl /usr/local/bin/kubectl
 
-RUN chown -R $USERNAME:$USERNAME /home/$USERNAME
-
-# log the docker build complete
-RUN echo "$(date +'%Y-%m-%d %H:%M:%S')    docker build complete" >> /home/$USERNAME/status
+RUN curl -L https://github.com/kubernetes-sigs/kind/releases/download/v${KIND_VERSION}/kind-linux-amd64 -o /usr/local/bin/kind && \
+    chmod +x /usr/local/bin/kind

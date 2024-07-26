@@ -2,6 +2,10 @@
 	"name": "NITA-in-Codespaces",
 	
 	//"dockerFile": "Dockerfile",
+    "build": {
+		"dockerfile": "Dockerfile",
+		"args": { "KIND_VERSION": "0.14.0" }
+	  },
 
 	"runArgs": ["--init", "--privileged"],
 	"mounts": [ "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind" ],
