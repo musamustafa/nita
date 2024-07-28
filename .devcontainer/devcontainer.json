@@ -23,6 +23,6 @@
 		"cpus": 2
 	},
 	// # use poststart "securityOpt": "
-	"postStartCommand": "/bin/bash -c .devcontainer/poststart.sh",
+	"postStartCommand": "sudo /bin/bash -c .devcontainer/poststart.sh",
 	"remoteUser": "root"
 }
