@@ -14,10 +14,13 @@
 	
 	//"remoteUser": "vscode",
 
-
+	"forwardPorts": [
+		443,
+		8443
+	],
 	    
 	"hostRequirements": {
-		"cpus": 4
+		"cpus": 2
 	},
 	"remoteUser": "root"
 }
