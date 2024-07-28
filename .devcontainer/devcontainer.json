@@ -24,5 +24,8 @@
 	},
 	// # use poststart "securityOpt": "
 	"postCreateCommand": "sudo /bin/bash -c .devcontainer/poststart.sh",
+
+	// run posStartcommand scritp
+	"postStartCommand": "sudo /bin/bash -c .devcontainer/custom.sh",
 	"remoteUser": "root"
 }
