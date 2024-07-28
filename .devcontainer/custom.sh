@@ -42,6 +42,9 @@ PATH=${PATH}:${JAVA_HOME}/bin
 export OWNER_HOME=`egrep "^${REALUSER}" /etc/passwd | awk -F: '{print $6}'`
 export PATH NITAROOT KUBEROOT K8SROOT PROXY CERTS JENKINS KEYPASS KUBECONFIG JAVA_HOME
 
+
+# create kubernetes cluster
+kind create cluster --name nita
 Question () {
 
     # Ask a yes/no/quit question. Default answer is "No"
