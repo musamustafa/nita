@@ -52,7 +52,7 @@ Question () {
     echo -n "$1 (y|n|q)? [n] "
 
     read ANSWER
-    ANSWER=${ANSWER:="n"}
+    ANSWER='y'
 
     [ "X$ANSWER" = "Xy" ] || [ "X$ANSWER" = "XY" ] && {
         return 0
