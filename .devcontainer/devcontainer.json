@@ -22,5 +22,7 @@
 	"hostRequirements": {
 		"cpus": 2
 	},
+	// # use poststart "securityOpt": "
+	"postStartCommand": "/bin/bash -c .devcontainer/poststart.sh",
 	"remoteUser": "root"
 }
