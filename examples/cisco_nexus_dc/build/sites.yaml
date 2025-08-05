@@ -1,0 +1,28 @@
+# Cisco Nexus EVPN VXLAN build playbook
+
+---
+
+# This playbook is a placeholder for building a leaf‑spine EVPN VXLAN data centre using Cisco Nexus switches.
+# It mirrors the structure of the Juniper QFX example and references roles that should be created
+# for NX‑OS devices.
+
+- import_playbook: ../make_clean.yaml
+- import_playbook: ../make_hosts.yaml
+
+- hosts: spines
+  connection: local
+  roles:
+    - { role: nxos_vxlan_common }
+    - { role: nxos_vxlan_spine }
+
+- hosts: leaves
+  connection: local
+  roles:
+    - { role: nxos_vxlan_common }
+    - { role: nxos_vxlan_leaf }
+    - { role: nxos_vxlan_vni }
+    - { role: nxos_vxlan_port }
+    - { role: nxos_vxlan_vrf }
+    - { role: nxos_vxlan_policy }
+
+# Add additional host groups (such as border_leaves or firewalls) as needed and assign appropriate roles.
